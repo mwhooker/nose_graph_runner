@@ -1,12 +1,30 @@
 from unittest import TestCase
 
-class Test(TestCase):
+class TestNode(TestCase):
+
+    methods = ('pre', 'post')
+    def __init__(self, method):
+
+        super(TestNode, self).__init__(method)
+
+    def __call__(self, *args, **kwargs):
+        print "__call__"
+
+        super(TestNode, self).__call__(*args, **kwargs)
+
+    def pre(self, **kwargs):
+        raise NotImplementedError
+
+    def post(self):
+        raise NotImplementedError
+
+class Test(TestNode):
 
     def test_first(self):
         self.assertTrue(True)
 
 
-class TestA(TestCase):
+class TestA(TestNode):
 
     def pre(self):
         self.foo = True
@@ -15,7 +33,7 @@ class TestA(TestCase):
         pass
 
 
-class TestB(TestCase):
+class TestB(TestNode):
 
     def pre(self):
         self.bar = True
@@ -25,7 +43,7 @@ class TestB(TestCase):
         pass
 
 
-class TestC(TestCase):
+class TestC(TestNode):
 
     depends = {
         'a': TestA,
